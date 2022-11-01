@@ -1,33 +1,14 @@
 import React, { useState, useEffect } from "react";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
 import "./App.css";
-import { Table } from "antd";
+import { Button, Table } from "antd";
 import { validateHeaderValue } from "http";
 
 interface DataType {
   title: string;
   description: string;
 }
-const columns = [
-  {
-    title: "Title",
-    dataIndex: "name",
-    key: "name",
-    // render: text => <a>"John Brown"</a>,
-  },
-  {
-    title: "Description",
-    dataIndex: "address",
-    key: "address",
-     render: (_, record:any) => {console.log(record)},
-  },
-  {
-    title: "Action",
-    dataIndex: "action",
-    key: "action",
-    // render: text => <a>"John Brown"</a>,
-  },
-];
 
 function App() {
   const [value, setValue] = useState<[]>([]);
@@ -37,12 +18,53 @@ function App() {
       .then((json) => setValue(json));
   }, []);
 
-  console.log(value);
+  const handleEdit = (id: Number) => {
+    console.log("🚀 ~ file: App.tsx ~ line 22 ~ App ~ id", id);
+    
+  };
+
+  const columns = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      render: (data: any) => {
+        return <li>{data}</li>;
+      },
+    },
+    {
+      title: "Address",
+      dataIndex: "address",
+      key: "address",
+      render: (data: any) => {
+        return <li>{data.street + ", " + data.city}</li>;
+      },
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (data: any) => {
+        return (
+          <>
+            <EditOutlined onClick={() => handleEdit(data.id)} />
+            <DeleteOutlined />
+          </>
+        );
+      },
+    },
+  ];
+
+  // console.log(value);
 
   return (
     <div className="App">
-      <Table columns={columns} dataSource={value} />
-
+      <Table
+        columns={columns}
+        dataSource={value}
+        rowKey={(data: any) => {
+          return data.id;
+        }}
+      />
     </div>
   );
 }
